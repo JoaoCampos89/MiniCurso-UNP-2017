@@ -1,0 +1,26 @@
+.team{
+height: 100px;
+background-color: green;
+margin:20px;
+position: relative;
+}
+.center{
+  width: 40%;
+  position: absolute;
+  margin: auto;
+  top:0;
+  right: 0;
+  left: 0;
+  bottom: 0;
+}
+
+.badge.my-badge{
+  position: absolute;
+  top:-10%;
+  right: -60%;
+  height: 60px;
+  width: 60px;
+  font-size: 25px;
+  border-radius: 30px;
+  line-height: 1.5;
+}

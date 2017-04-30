@@ -1,0 +1,20 @@
+<template name="appPage">
+  <div class="jumbotron text-center">
+    <h1>Mini Curso</h1>
+    <p></p>
+  </div>
+  <div class="container app-container">
+    <div class="row my-row">
+
+
+      {{#each team in teams}}
+        <div class="col-xs-11 col-sm-6 col-md-3 my-col">
+          {{>teamComponent team=team}}
+
+        </div>
+      {{/each}}
+    </div>
+  </div>
+
+
+</template>

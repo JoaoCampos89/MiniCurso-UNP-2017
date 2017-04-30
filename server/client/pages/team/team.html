@@ -1,0 +1,16 @@
+<template name="teamPage">
+  <div class="jumbotron text-center">
+    <h1>{{name}}</h1>
+
+  </div>
+  <div class="container">
+    <button class="btn btn-default voltar">Voltar</button>
+    <a  class="btn btn-default ver-chart">Ver {{textButton}}</a>
+    <a  class="btn {{btnConnectLed}} ligar-led">{{connectLed}}</a>
+    {{#if displayChart}}
+     {{>chartComponent chartData=data}}
+      {{else}}
+      {{> reactiveTable settings=settings}}
+    {{/if}}
+  </div>
+</template>
