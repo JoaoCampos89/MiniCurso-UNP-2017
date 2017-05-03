@@ -22,8 +22,10 @@ MessageServer = new Mongo.Collection(null);
 
 
 _.each(Teams, function(team) {
-  mqttClient.subscribe("minicurso/" + team + "/sensor/value");
+//  mqttClient.subscribe("minicurso/" + team + "/sensor/value");
   //  mqttClient.subscribe("arduino-day/team0");
+//  mqttClient.subscribe(team + "/LED/ESTADO/GET");
+  mqttClient.subscribe(team + "/LDR/ESTADO/GET");
 });
 
 
@@ -68,14 +70,15 @@ Meteor.publish('messages', function(argument) {
  * @return {[type]} [description]
  */
 mqttClient.on('message', Meteor.bindEnvironment(function(topic, message) {
-
+  //console.log("message arrived");
   var value = Number(message.toString());
   topic = topic.split("/");
   if (!isNaN(value)) {
 
     var msg = {
       measurament: value,
-      topic: topic[1],
+      topic: topic[0],
+      field: topic[1],
       ts: new Date(),
     };
     MessageServer.insert(msg);
@@ -98,14 +101,23 @@ Meteor.methods({
       led = "0";
     }
     var msg = led;
-
-    mqttClient.publish('minicurso/command/' + argument.teamName, msg,
+    console.log("sending command");
+    console.log(argument.teamName + '/LED/ESTADO/SET');
+    /*mqttClient.publish('minicurso/command/' + argument.teamName, msg,
       function(error) {
         if (error) {
           console.log(error);
         }
 
-      });
+      });*/
+
+    mqttClient.publish(argument.teamName + '/LED/ESTADO/SET', msg,
+        function(error) {
+          if (error) {
+            console.log(error);
+          }
+
+        });
 
     return led;
 

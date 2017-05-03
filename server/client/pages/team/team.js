@@ -4,7 +4,8 @@ Template.teamPage.onCreated(function() {
   template.connectLed = new ReactiveVar(false);
   var urlParam = FlowRouter.getParam("team");
   var messages = Messages.find({
-    topic: urlParam
+    topic: urlParam,
+    field: "LDR"
   }).fetch();
   template.msgArray = messages;
 });

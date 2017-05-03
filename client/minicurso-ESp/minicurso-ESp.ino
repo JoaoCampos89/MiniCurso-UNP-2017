@@ -24,7 +24,15 @@ WiFiClient espClient;
 PubSubClient client(espClient);
 //
 // Insira aqui o ip do computador aonde está alojado o broker mqtt
-IPAddress server(192, 168, 0, 100);
+IPAddress server(192, 168, 0, 102);
+
+
+// Usar com o witty
+#define RED_PIN      7   // RGB Light pin at Arduino pin 3
+#define GREEN_PIN    8   // RGB Light pin at Arduino pin 5
+#define BLUE_PIN     9   // RGB Light pin at Arduino pin 6
+#define BUTTON_PIN   4   // button
+#define LDR_PIN      A0
 
 
 // função que será chamada sempre que uma mensagem mqtt é recebida
@@ -36,7 +44,7 @@ char password[] = "";           // your network password
 int status = WL_IDLE_STATUS;   // the Wifi radio's status
 
 // Coloque o nome da sua equipe
-char EQUIPE = "EQUIPE1";
+char EQUIPE[] = "EQUIPE1";
 
 int LED = 2;
 
@@ -48,7 +56,7 @@ using namespace std;
 
 void setup(){
 
-
+  //pinMode(RED_PIN, OUTPUT);
 
   Serial.begin(115200);
   // Iniciar a comunicação com o esp
@@ -82,14 +90,18 @@ void loop(){
 
 
 // manda mensagem a cada um segundo da distancia
- if(timer-timerLast>1000){
+ if(timer-timerLast>3000){
     timerLast = timer;
     // se cliente conectado
     // mandar mensagem da distancia
     if(client.connected()){
       Serial.println("Publishing data");
-      String distanceMsg = String(getDistancia());
-      client.publish("MINICURSO/LED/ESTADO/GET", distanceMsg.c_str());
+      float ldrRead =  analogRead(LDR_PIN);
+      // String distanceMsg = String(getDistancia());
+      String distanceMsg = String(ldrRead);
+      String publication = String(EQUIPE) + String("/LDR/ESTADO/GET");
+      Serial.println(publication);
+      client.publish(publication.c_str(), distanceMsg.c_str());
     }
 
  }
@@ -155,13 +167,17 @@ void callback(char* topic, byte* payload, unsigned int length) {
    payloadMsg[i] = (char)payload[i];
   }
   payloadMsg[length] = '\0';
-  String topic = String(topic);
+  String topicArrived = String(topic);
 
  // O tópico recebido corresponde aquele que nós estamos esperando
-  if(topic == (String(EQUIPE) + String("/LED/ESTADO/SET"))){
+  String topicString =  String(EQUIPE) + String("/LED/ESTADO/SET");
+ 
+  if(topicArrived == topicString){
      String msg = String(payloadMsg);
     //
-    digitalWrite(LED, msg.toInt());
+    Serial.print("Mudando Estado do Led");
+    Serial.print(msg.toInt());
+    digitalWrite(RED_PIN, msg.toInt());
     // Publicar que o estado do LED mudou
 
     String publication = String(EQUIPE) + String("/LED/ESTADO/GET");
