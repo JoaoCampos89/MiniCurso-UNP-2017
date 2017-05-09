@@ -16,7 +16,11 @@ Server
 
 
   Servidor usado para receber os dados dos Esp
+
   digitar `git clone https://github.com/JoaoCampos89/MiniCurso-UNP-2017` na linha de comandos para clonar o repositório
+
   digitar `cd server`
+
   digitar `meteor npm --install save`
+
   digitar `meteor` para iniciar o servidor
